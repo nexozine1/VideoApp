@@ -2,9 +2,9 @@
   "build": {
     "preview": {
       "ios": {
-        "simulator": true
+        "simulator": false,
+        "distribution": "internal"
       }
-    },
-    "production": {}
+    }
   }
 }
