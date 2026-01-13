@@ -2,8 +2,8 @@
   "build": {
     "preview": {
       "ios": {
-        "simulator": false,
-        "distribution": "internal"
+        "simulator": true,
+        "image": "macos-14-xcode-15.4"
       }
     }
   }
