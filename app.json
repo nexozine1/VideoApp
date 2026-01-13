@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "VideoApp",
+    "slug": "videoapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#000000",
+    "extra": {
+      "eas": {
+        "projectId": "f6dc33f9-2823-4b2b-bc73-8a1adc616852"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nexozindsds.videoapp",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photos so you can upload your videos for the seamless experience.",
+        "NSAppleMusicUsageDescription": "This app needs access to your media library to play videos.",
+        "UIViewControllerBasedStatusBarAppearance": false
+      }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow VideoApp to access your photos."
+        }
+      ],
+      "expo-av"
+    ],
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    }
+  }
+}
