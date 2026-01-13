@@ -14,16 +14,16 @@ jobs:
       - name: 🏗 Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # <--- Changed from 18 to 20 to fix the error
+          node-version: 20
 
       - name: 🏗 Setup Expo
         uses: expo/expo-github-action@v8
         with:
-          eas-version: latest # <--- Use EAS instead of the old Expo CLI
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps  # <--- This is the fix!
 
       - name: 🚀 Build IPA
         run: eas build --platform ios --profile preview --non-interactive
