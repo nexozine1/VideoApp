@@ -1,14 +1,11 @@
-name: Build IPA
-on:
-  push:
-    branches:
-      - main
+name: Manual iPhone Build
+on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_native:
+    runs-on: macos-14
     steps:
-      - name: 🏗 Checkout repo
+      - name: 🏗 Checkout Repository
         uses: actions/checkout@v4
 
       - name: 🏗 Setup Node
@@ -16,14 +13,37 @@ jobs:
         with:
           node-version: 20
 
-      - name: 🏗 Setup Expo
-        uses: expo/expo-github-action@v8
+      - name: 📦 Install Dependencies
+        run: |
+          npm install --legacy-peer-deps
+          # Ensures the app has a valid entry point for native compilation
+          echo "import { registerRootComponent } from 'expo'; import App from './App'; registerRootComponent(App);" > index.js
+
+      - name: 🛠 Generate Native iOS Code
+        run: npx expo prebuild --platform ios --clean
+
+      - name: 🛠 Force Fix Node Path
+        run: |
+          NODE_PATH=$(command -v node)
+          echo "export NODE_BINARY=$NODE_PATH" > ios/.xcode.env
+          echo "export NODE_BINARY=$NODE_PATH" > ios/.xcode.env.local
+          sudo ln -s $NODE_PATH /usr/local/bin/node || true
+
+      - name: 🚀 Build for Real Device (iPhone)
+        run: |
+          xcodebuild \
+            -workspace ios/videoapp.xcworkspace \
+            -scheme videoapp \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath ios/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
+
+      - name: 📦 Upload Application
+        uses: actions/upload-artifact@v4
         with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: 📦 Install dependencies
-        run: npm install --legacy-peer-deps  # <--- This is the fix!
-
-      - name: 🚀 Build IPA
-        run: eas build --platform ios --profile preview --non-interactive
+          name: VideoApp-RealDevice
+          path: ios/build/Build/Products/Release-iphoneos/videoapp.app
