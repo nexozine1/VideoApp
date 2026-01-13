@@ -2,7 +2,7 @@ name: Build IPA
 on:
   push:
     branches:
-      - main  # This starts the build every time you push code to main
+      - main
 
 jobs:
   build:
@@ -14,13 +14,12 @@ jobs:
       - name: 🏗 Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20  # <--- Changed from 18 to 20 to fix the error
 
       - name: 🏗 Setup Expo
         uses: expo/expo-github-action@v8
         with:
-          expo-version: latest
-          eas-cache: true
+          eas-version: latest # <--- Use EAS instead of the old Expo CLI
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
